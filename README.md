@@ -8,7 +8,7 @@ A small shopping app made with Flutter for the Mobile Application Development co
 
 ## About
 
-This is my assignment for the Flutter mini e-commerce app. The app shows products in different categories. You can open a category to see its products in a grid, and open any product to see its details. There is no login, payment or backend. All the product data is written inside the app in `lib/data/product_data.dart`.
+This is my assignment for the Flutter mini e-commerce app. The app shows products in different categories. You can open a category to see its products in a grid, and open any product to see its details. There is no payment or backend. Login data is saved on the phone with SharedPreferences. All the product data is written inside the app in `lib/data/product_data.dart`.
 
 ## What the app has
 
@@ -20,6 +20,8 @@ This is my assignment for the Flutter mini e-commerce app. The app shows product
 - Category page with a `GridView.builder`, it receives the category name and shows only that category's products
 - Product details page with image, name, price, rating, category, description and an Add to Cart button (shows a SnackBar)
 - Search bar on the home page, it filters products by name or category while typing
+- Register and login with SharedPreferences, the user stays logged in after the app is closed
+- Logout button in the app bar with a confirm dialog, and a hello message with the user's name
 - 6 categories and 12 products
 
 ## Screenshots
@@ -36,6 +38,8 @@ Search, and the "See All" page
 
 - `carousel_slider` ([pub.dev](https://pub.dev/packages/carousel_slider)) - I used it for the banner slider on the home page. It slides the banners automatically and lets the user swipe. The code is in `lib/widgets/banner_carousel.dart`.
 
+- `shared_preferences` ([pub.dev](https://pub.dev/packages/shared_preferences)) - saves the registered users and the logged in user on the phone. The code is in `lib/services/auth_service.dart`.
+
 ## How to run
 
 1. Install Flutter and set up an emulator or a phone.
@@ -49,8 +53,10 @@ Search, and the "See All" page
 - `lib/main.dart` - app start and theme
 - `lib/models/` - product and category classes
 - `lib/data/` - the product list
+- `lib/services/` - AuthService for register, login and logout
 - `lib/screens/` - home, category and product details pages
 - `lib/widgets/` - product card, category item, banner slider, image widget
 - `lib/theme/` - colors
 - `assets/images/` - product and banner pictures
 - `screenshots/` - screenshots used in this file
+
