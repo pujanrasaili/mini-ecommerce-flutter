@@ -30,9 +30,9 @@ This is my assignment for the Flutter mini e-commerce app. The app shows product
 
 Home page, category page, product details page
 
-<img src="screenshots/search.png" width="220"> <img src="screenshots/all_products.png" width="220">
+<img src="screenshots/search.png" width="220"> <img src="screenshots/all_products.png" width="220"> <img src="screenshots/login.png" width="220">
 
-Search, and the "See All" page
+Search, "See All" page and the login page
 
 ## Packages used
 
