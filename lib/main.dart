@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'screens/home_page.dart';
+import 'screens/login_screen.dart';
+import 'services/auth_service.dart';
 import 'theme/app_colors.dart';
 
-void main() {
-  runApp(const MyShopApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // check if a user is already saved in SharedPreferences
+  final username = await AuthService().currentUser();
+  runApp(MyShopApp(isLoggedIn: username != null));
 }
 
 class MyShopApp extends StatelessWidget {
-  const MyShopApp({super.key});
+  const MyShopApp({super.key, required this.isLoggedIn});
+
+  final bool isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +55,7 @@ class MyShopApp extends StatelessWidget {
           behavior: SnackBarBehavior.floating,
         ),
       ),
-      home: const HomePage(),
+      home: isLoggedIn ? const HomePage() : const LoginScreen(),
     );
   }
 }

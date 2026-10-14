@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../data/product_data.dart';
 import '../models/product.dart';
+import '../services/auth_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/banner_carousel.dart';
 import '../widgets/category_item.dart';
 import '../widgets/product_card.dart';
 import 'category_page.dart';
+import 'login_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +21,60 @@ class _HomePageState extends State<HomePage> {
   final searchController = TextEditingController();
   final searchFocus = FocusNode();
   String query = '';
+  final auth = AuthService();
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  // get the saved user so we can say hello
+  Future<void> loadUser() async {
+    final username = await auth.currentUser();
+    if (username == null) {
+      goToLogin();
+      return;
+    }
+    final profile = await auth.profileOf(username);
+    if (!mounted) return;
+    setState(() {
+      userName = profile?['name'] ?? username;
+    });
+  }
+
+  void goToLogin() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
+  Future<void> logout() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await auth.logout();
+    if (!mounted) return;
+    goToLogin();
+  }
 
   @override
   void dispose() {
@@ -222,11 +278,30 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
+          IconButton(
+            tooltip: 'Logout',
+            icon: const Icon(Icons.logout),
+            onPressed: logout,
+          ),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
+            if (userName.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Hello, $userName 👋',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
             searchBar(),
             Expanded(
               child: query.isEmpty ? homeContent() : resultsView(),
